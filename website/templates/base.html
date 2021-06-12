@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title%}</title>
+
+    {% include "scripts.html" %}
+    {% block customscripts %}
+    <script type="text/x-mathjax-config">
+      MathJax = {
+          tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          packages: ['base'],
+          processEnvironments: true
+          },
+          loader: {
+          load: ['output/chtml']
+          }
+      };
+      MathJax.Hub.Config({ 
+          "HTML-CSS": { scale: 75, linebreaks: { automatic: true } }, 
+          SVG: { linebreaks: { automatic:true } }, 
+          displayAlign: "left" });
+  </script>
+  
+  <script type="text/javascript" id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    {# TODO keep empty #}  
+    {% endblock customscripts%}
+
+
+ </head>
+
+<body>
+  <div class="wrapper">
+    {% include "sidebar.html" %}
+    <div id="content">
+      {% include "topbar.html" %}
+
+
+      {% block content %}
+      {% endblock content%}
+    </div>
+  </div>
+</body>
+</html>

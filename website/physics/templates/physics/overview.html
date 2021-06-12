@@ -1,0 +1,50 @@
+{% extends "physics/base.html" %}
+
+
+
+{% block customscripts %}
+<script type="text/x-mathjax-config">
+    MathJax = {
+        tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        packages: ['base'],
+        processEnvironments: true
+        },
+        loader: {
+        load: ['output/chtml']
+        }
+    };
+    MathJax.Hub.Config({ 
+        "HTML-CSS": { scale: 75, linebreaks: { automatic: true } }, 
+        SVG: { linebreaks: { automatic:true } }, 
+        displayAlign: "left" });
+</script>
+
+<script type="text/javascript" id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+{% endblock customscripts %}
+
+
+{% block content %}
+
+<h1 class="display-3">Physical doodling</h1>
+{% if post_list %}
+<div class="list-group">
+    {% for post in post_list %}
+        <a href="/physics/{{ post.id }}/" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ post.title }}</h5>
+            <small>{{ post.date|date}}</small>
+            </div>
+            <p class="mb-1">{{ post.content }}</p>
+            <small>{{ post.topics }}</small>
+        </a>
+    {% endfor %}
+    
+{% else %}
+    <p>No posts created yet.</p>
+{% endif %}
+
+{% endblock content %}
+
+
