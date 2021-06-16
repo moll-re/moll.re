@@ -138,16 +138,6 @@ ul.CTAs a {
     margin-bottom: 5px;
 }
 
-a.download {
-    background: #fff;
-    color: var(--accent-third);
-}
-
-a.article,
-a.article:hover {
-    background: var(--accent-third) !important;
-    color: #fff !important;
-}
 
 /* ---------------------------------------------------
     CONTENT STYLE
@@ -157,7 +147,7 @@ a.article:hover {
     width: 100%;
     padding: 20px;
     min-height: 100vh;
-    transition: all 0.3s;
+    transition: all 0.2s;
 }
 
 /* ---------------------------------------------------

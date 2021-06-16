@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "physics/base.html" %}
 
 
 
@@ -6,6 +6,6 @@
     <h1 class="post-title">{{ title }}</h1>
     <h3>{{ date}}</h3>
     <h5>{{ topics }}</h5>
-    <p> {{ content }}</p>
+    <p> {{ content|safe }}</p>
     Viewed {{ views }} times.
 {% endblock content %}

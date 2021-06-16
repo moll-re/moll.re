@@ -1,27 +1,16 @@
 <nav id="sidebar">
   <div class="sidebar-header">
-      <h3>moll.re <i class="fa fa-angle-double-left"></i></h3>
-      
+      <a href="/"><h3>
+        moll.re
+        <i class="fa fa-angle-double-left"></i>
+      </h3></a>
   </div>
 
 
   <ul class="list-unstyled components">
-      <p>Dummy Heading</p>
-      <li class="active">
-          <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-          <ul class="collapse list-unstyled" id="homeSubmenu">
-              <li>
-                  <a href="#">Home 1</a>
-              </li>
-              <li>
-                  <a href="#">Home 2</a>
-              </li>
-              <li>
-                  <a href="#">Home 3</a>
-              </li>
-          </ul>
-      </li>
-      {% with 'physics about test' as list %}
+      <p>My personal website. It is a little experimentation about django, wehbosting, and programming in general.</p>
+      
+      {% with 'physics analytics about' as list %}
         {% for u in list.split %}
           {% with "/"|add:u|add:"/" as p %}
             <li class="{% if request.path == p %}active{% endif %}">
@@ -30,7 +19,22 @@
           {% endwith %}
         {% endfor %}
       {% endwith %}
+    <!--
         
+    <li class="active">
+        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+        <ul class="collapse list-unstyled" id="homeSubmenu">
+            <li>
+                <a href="#">Home 1</a>
+            </li>
+            <li>
+                <a href="#">Home 2</a>
+            </li>
+            <li>
+                <a href="#">Home 3</a>
+            </li>
+        </ul>
+      </li>
       <li>
           <a href="#">About</a>
       </li>
@@ -53,15 +57,14 @@
       </li>
       <li>
           <a href="#">Contact</a>
-      </li>
+      </li>-->
   </ul>
 
   <ul class="list-unstyled CTAs">
       <li>
-          <a href="https://github.com/moll-re/website-eth" class="download"><i class="fab fa-github"></i> Source</a>
+          <a href="https://github.com/moll-re/website" class="btn btn-primary "><i class="fab fa-github"></i> Source</a>
+          <!--btn-lg active??-->
       </li>
-      <li>
-          <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
-      </li>
+
   </ul>
 </nav>

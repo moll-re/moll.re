@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}
+About
+{% endblock title %}
+
+{% block customscripts %}
+{% load static %}
+<link rel="stylesheet" href="{% static "css/timeline.css" %}"/>
+{% endblock customscripts %}
+
+{% block content %}
+<h1 class="display-3">About</h1>
+Hey there! My name is Rémy Moll. I currently live and study in Zurich, Switzerland. Please have a look at my curriculum vitae:
+
+<h4>What I have been up to lately:</h4>
+
+<div class="container mt-5 mb-5">
+	<div class="row">
+		<div class="col-md-6 offset-md-3">
+			<ul class="timeline">
+                {% for event in timeline %}
+                    <li>
+                        <a target="_blank" href="{{ event.link }}">{{ event.title }}</a>
+                        <a href="#" class="float-end"><span class="badge bg-secondary">{{ event.date}}</span></a>
+                        <p>{{ event.text }}</p>
+                    </li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+
+
+<h4>My CV:</h4>
+<object width="100%" height="700" type="application/pdf" data="{% static "cv.pdf" %}?#zoom=80&scrollbar=0&toolbar=0&navpanes=0">
+    <p>It seems like the pdf won't load. Try downloading it anyway: <a href="{% static "cv.pdf" %}">cv.pdf</a></p>
+</object>
+
+
+<h4>Contact:</h4>
+I'd leave you with a fancy form but the easiest way to reach me is probably via mail:
+<a href="mailto:remoll@ethz.ch">remoll@ethz.ch</a>
+Or have a look at my GitHub profile: <a href="https://github.com/moll-re">https://github.com/moll-re</a>.
+
+{% endblock content %}

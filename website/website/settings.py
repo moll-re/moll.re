@@ -25,13 +25,16 @@ SECRET_KEY = '^qli=3k7fyn(#f3%=6!czk8a_dlay))41uqr5wvnt16a6+uzeo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    "physics.apps.PhysicsConfig",
+    'home.apps.HomeConfig',
+    'physics.apps.PhysicsConfig',
+    'about.apps.AboutConfig',
+    'analytics.apps.AnalyticsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

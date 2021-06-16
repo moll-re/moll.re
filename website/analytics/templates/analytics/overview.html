@@ -1,0 +1,29 @@
+{% extends "physics/base.html" %}
+
+{% block title %}
+Analytics
+{% endblock title %}
+
+{% block customscripts %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<style>.modebar{display: none !important;}</style>
+{% endblock customscripts %}
+
+{% block content %}
+<h1 class="display-3">Website analytics</h1>
+
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
+    <!-- Preset for responsive card layout-->
+    {% for card in card_list %}
+        <div class="col"><!-- width? -->
+            <div class="card mb-4">
+                {{ card.content|safe }}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+  
+{% endblock content %}
+
+
