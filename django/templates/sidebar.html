@@ -1,19 +1,19 @@
 <nav id="sidebar">
-  <div class="sidebar-header">
+  <div class="sidebar-header text-center">
       <a href="/"><h3>
         moll.re
         <i class="fa fa-angle-double-left"></i>
       </h3></a>
   </div>
 
-
+  
   <ul class="list-unstyled components">
-      <p>My personal website. It is a little experimentation about django, wehbosting, and programming in general.</p>
+      <p class="text-center">My personal website. It is a little experimentation about django, wehbosting, and programming in general.</p>
       
       {% with 'physics analytics about' as list %}
         {% for u in list.split %}
           {% with "/"|add:u|add:"/" as p %}
-            <li class="{% if request.path == p %}active{% endif %}">
+            <li class="{% if request.path == p %}active{% endif %} text-center">
               <a href="/{{u}}">{{u}}</a>
             </li>
           {% endwith %}
@@ -62,7 +62,7 @@
 
   <ul class="list-unstyled CTAs">
       <li>
-          <a href="https://github.com/moll-re/website" class="btn btn-primary "><i class="fab fa-github"></i> Source</a>
+          <a href="https://github.com/moll-re/moll.re" class="btn btn-primary"><i class="fab fa-github"></i> Source</a>
           <!--btn-lg active??-->
       </li>
 

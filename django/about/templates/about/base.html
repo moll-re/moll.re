@@ -10,14 +10,16 @@ About
 {% endblock customscripts %}
 
 {% block content %}
+<div class="container mt-5 mb-5">
+
 <h1 class="display-3">About</h1>
-Hey there! My name is Rémy Moll. I currently live and study in Zurich, Switzerland. Please have a look at my curriculum vitae:
+<p>Hey there! My name is Rémy Moll. I currently live and study in Zurich, Switzerland.</p>
+
 
 <h4>What I have been up to lately:</h4>
 
-<div class="container mt-5 mb-5">
 	<div class="row">
-		<div class="col-md-6 offset-md-3">
+		<div class="col-lg-6 offset-lg-3">
 			<ul class="timeline">
                 {% for event in timeline %}
                     <li>
@@ -29,7 +31,7 @@ Hey there! My name is Rémy Moll. I currently live and study in Zurich, Switzerl
 			</ul>
 		</div>
 	</div>
-</div>
+
 
 
 <h4>My CV:</h4>
@@ -39,8 +41,11 @@ Hey there! My name is Rémy Moll. I currently live and study in Zurich, Switzerl
 
 
 <h4>Contact:</h4>
-I'd leave you with a fancy form but the easiest way to reach me is probably via mail:
-<a href="mailto:remoll@ethz.ch">remoll@ethz.ch</a>
-Or have a look at my GitHub profile: <a href="https://github.com/moll-re">https://github.com/moll-re</a>.
+I'd leave you with a fancy form but the easiest way to reach me is probably via mail. You could also have a look at my GitHub profile.
+<div class="d-grid gap-2 col-4 mx-auto">
+    <a class="btn btn-primary" href="mailto:remoll@ethz.ch">remoll@ethz.ch</a>
+    <a class="btn btn-primary" href="https://github.com/moll-re"><i class="fab fa-github"></i> moll-re</a>
+</div>
+</div>
 
 {% endblock content %}

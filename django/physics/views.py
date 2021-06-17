@@ -5,20 +5,26 @@ from .models import Post
 from django.db.models import F
 
 import markdown
-md = markdown.Markdown()
+md = markdown.Markdown(extensions=["markdown_katex"])
 
 
 OVERVIEW_CUT = 100
 def index(request):
     post_list = Post.objects.order_by("pub_date")
-    quickview = [{
-        "id" : p.id,
-        "title" : p.title,
-        "content" : " ".join(p.content.split(" ")[:OVERVIEW_CUT]) + " ...", # shortened to the 100 first words.
-        "topics": ", ".join([t.topic for t in p.topics.all()]),
-        "date" : p.pub_date,
-    } for p in post_list]
-    context = {"post_list" : quickview}
+    
+    overview = []
+    for p in post_list:
+        content_short = " ".join(p.content.split(" ")[:OVERVIEW_CUT]) + " ..." # shortened to the 100 first words.
+        # TODO: verify if not breaking math. replace titles by bold text
+        data = {
+            "id" : p.id,
+            "title" : p.title,
+            "content" : md.convert(content_short),
+            "topics": p.topics.all(),
+            "date" : p.pub_date,
+        }
+        overview.append(data)
+    context = {"post_list" : overview}
     return render(request, "physics/overview.html", context)
 
 
@@ -31,7 +37,7 @@ def expand_post(request, post_id):
         "title" : p.title,
         "content" : md.convert(p.content),
         "date" : p.pub_date.date(),
-        "topics": ", ".join([t.topic for t in p.topics.all()]),
+        "topics": p.topics.all(),
         "views": p.views,
         "toplinks" : get_toplinks(int(post_id)),
         }
