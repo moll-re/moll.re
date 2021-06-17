@@ -4,10 +4,12 @@
 
 {% block content %}
     <h1 class="post-title">{{ title }}</h1>
-    <h3>{{ date}}</h3>
-    <h5>{{ topics }}</h5>
+    <p class="text-muted">{{ date}}</p>
+    {% for t in topics %}
+        <span class="badge bg-secondary">{{ t }}</span>
+    {% endfor %}
     <p> {{ content|safe }}</p>
-    Viewed {{ views }} times.
+    Viewed <span class="badge bg-secondary">{{ views }}</span> times.
 {% endblock content %}
 
 <!-- Testing some git things-->
