@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Welcome!
+{% endblock title %}
+
+
+{% block customscripts %}
+{% load static %}
+<link rel="stylesheet" href="{% static "css/animation.css" %}"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+{% endblock customscripts %}
+
+
+{% block content %}
+
+<div class="position-absolute top-50 start-50 translate-middle">
+    
+    <a href="#" class="intro-banner-vdo-play-btn pinkBg">
+        <i class="glyphicon glyphicon-play whiteText" aria-hidden="true"></i>
+        <span class="ripple pinkBg"></span>
+        <span class="ripple pinkBg"></span>
+        <span class="ripple pinkBg"></span>
+    </a>
+    <br /><br /><br /><br /><br /><br /><br /><br />
+    <h1 class="display-3">Welcome to moll.re!</h1>
+     
+</div>
+{% endblock content %}
