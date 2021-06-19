@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Sum
+import time
 
 from physics.models import Post as ppost
 # from blog.models import Post as bpost
@@ -12,10 +13,12 @@ from plotly.graph_objs import Scatter
 
 card_str = """
 <div class="card-body">
-    <h5 class="card-title">{}</h5>
-    {}
+    <h5 class="card-title">{title}</h5>
+    {content}
 </div>
 """
+
+
 def index(request):
     card = """
         <img src="https://dummyimage.com/600x400/000/fff.jpg" class="card-img-top" alt="...">
@@ -24,23 +27,82 @@ def index(request):
           <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
         </div>
     """
-    context = {"card_list": []} #{"content": card, "width" : i} for i in range(1,5)]}
-    context["card_list"].append({"content": card_total_views(), "width" : 4})
-    context["card_list"].append({"content": card_relative_views(), "width" : 4})
+    context = {"card_list": []}
+
+    context["card_list"].append({
+        "content": async_card(
+            "Total views",
+            "total_views",
+            "fetch_total_views"
+            ),
+        "width" : 4})
+
+
+    context["card_list"].append({
+        "content": async_card(
+            "Post view ratio",
+            "relative_views",
+            "fetch_relative_views"
+            ),
+        "width" : 4})
+    # context["card_list"].append({"content": card_relative_views(), "width" : 4})
     return render(request, "analytics/overview.html", context)
 
 
+def async_card(title, id, func):
+    loader = """
+    <script>
+    $(document).ready(
+        function(){{
+            $("#{id}").load("{url}");
+        }}
+    );
+    </script>
+    <div id="{id}" class="text-center">
+        <div class="spinner-grow" role="status" >
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    """
+    loaded = loader.format(id=id, url=func)
+    load_card = card_str.format(title=title, content=loaded)
+    return load_card
 
-def card_total_views():
+
+
+    
+def fetch_total_views(request):
+    time.sleep(5)
     x_data = [0,1,2,3]
     y_data = [x**2 for x in x_data]
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=x_data, y=y_data, mode='lines', name='test', opacity=0.8, marker_color='green'))
     fig = cleanse_fig(fig)
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
-    card = card_str.format("Testing a thing", plot_div)
-    return card
-    
+    return HttpResponse(plot_div)
+
+
+
+
+def fetch_relative_views(request):
+    values = []
+    labels = []
+    for plist in [ppost]:
+        for post in plist.objects.all():
+            values.append(post.views)
+            labels.append(post.title)
+
+    fig = go.Figure()
+    fig.add_trace(go.Pie(labels = labels, values=values, textinfo="label"))
+    fig = cleanse_fig(fig)
+    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+    return HttpResponse(plot_div)
+
+
+
+
+
+
 
 def get_cumulated():
     total_posts = 0
@@ -53,23 +115,7 @@ def get_cumulated():
     return total_posts, total_views
 
 
-def card_relative_views():
-    values = []
-    labels = []
-    for plist in [ppost]:
-        for post in plist.objects.all():
-            values.append(post.views)
-            labels.append(post.title)
-
-    fig = go.Figure()
-    fig.add_trace(go.Pie(labels = labels, values=values, textinfo="label"))
-    fig = cleanse_fig(fig)
-    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
-    card = card_str.format("Post view ratio", plot_div)
-    return card
-
-
-
+######## helper:
 def cleanse_fig(fig):
     fig.layout.update(
             xaxis = {
