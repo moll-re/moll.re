@@ -3,11 +3,21 @@
 
 
 {% block content %}
-    <h1 class="post-title">{{ title }}</h1>
+    <div class="row align-items-center">
+        <div class="col-md-10">
+            <h1 class="display-3">{{ title }}</h1>
+        </div>
+        <div class="col-md-1 align-middle">
+            {% include 'physics/postnav_macro.html' with posts=toplinks %}
+        </div>
+    </div>
+    
+    
     <p class="text-muted">{{ date}}</p>
     {% for t in topics %}
         <span class="badge bg-secondary">{{ t }}</span>
     {% endfor %}
+    <hr/>
     <p> {{ content|safe }}</p>
     Viewed <span class="badge bg-secondary">{{ views }}</span> times.
 {% endblock content %}

@@ -18,7 +18,7 @@ def generate_event_list():
             "date" : "01.09.2020",
             "title" : "Teaching assistant at D-INFK",
             "link" : "https://inf.ethz.ch",
-            "text" : "During the semester I held a tutorial accompagnying the lecure 'Informatik 1' held by prof. Friedrich and prof. Schwerhoff."
+            "text" : "During the semester I held a weekly tutorial accompagnying the lecure 'Informatik 1' held by prof. Friedrich and prof. Schwerhoff."
         },
         {
             "date" : "19.06.2019",

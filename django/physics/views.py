@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import datetime
 # from django.template import loader
 from .models import Post
-from django.db.models import F
 
 import markdown
-md = markdown.Markdown(extensions=["markdown_katex"])
+md = markdown.Markdown()#   extensions=["markdown_katex"])
 
 
 OVERVIEW_CUT = 100
@@ -19,7 +19,7 @@ def index(request):
         data = {
             "id" : p.id,
             "title" : p.title,
-            "content" : md.convert(content_short),
+            "content" : md.convert(content_short, output_format="html5"),
             "topics": p.topics.all(),
             "date" : p.pub_date,
         }
@@ -30,28 +30,29 @@ def index(request):
 
 def expand_post(request, post_id):
     p = Post.objects.get(id=post_id)
-    p.views += 1
-    p.save()
-    print(type(p.pub_date))
+    # increase count number:
+    p.views.create(call_date=datetime.datetime.now())
     context = {
         "title" : p.title,
         "content" : md.convert(p.content),
         "date" : p.pub_date.date(),
         "topics": p.topics.all(),
-        "views": p.views,
+        "views": p.views.count(),
         "toplinks" : get_toplinks(int(post_id)),
         }
     return render(request, "physics/post.html", context)
 # Create your views here.
 
+
 def get_toplinks(post_id):
-    links = [
-        {"text":'<i class="fa fa-angle-left"></i> Previous post', "url": "/physics/{}".format(post_id - 1)},
-        {"text":'Next post <i class="fa fa-angle-right"></i>', "url": "/physics/{}".format(post_id + 1)}
-    ]
+    links = {
+        "previous" : "/physics/{}".format(post_id - 1),
+        "next" : "/physics/{}".format(post_id + 1)
+    }
+
     if post_id == 1:
-        links.pop(0)
+        links.pop("previous")
     elif post_id == Post.objects.count():
-        links.pop(1)
+        links.pop("next")
 
     return links

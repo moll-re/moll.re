@@ -1,9 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db.models import Sum
+from django.db.models import Sum, Count
+from django.db.models.functions import Trunc
+
 import time
 
 from physics.models import Post as ppost
+post_list = [ppost]
+from .models import SensorMetric as sensor
+
 # from blog.models import Post as bpost
 
 import plotly.graph_objects as go
@@ -31,7 +36,7 @@ def index(request):
 
     context["card_list"].append({
         "content": async_card(
-            "Total views",
+            "Total views (hourly)",
             "total_views",
             "fetch_total_views"
             ),
@@ -46,6 +51,14 @@ def index(request):
             ),
         "width" : 4})
     # context["card_list"].append({"content": card_relative_views(), "width" : 4})
+
+    context["card_list"].append({
+        "content": async_card(
+            "Sensor metrics",
+            "aio_sensors",
+            "fetch_aio_sensors"
+            ),
+        "width" : 4})
     return render(request, "analytics/overview.html", context)
 
 
@@ -72,15 +85,35 @@ def async_card(title, id, func):
 
     
 def fetch_total_views(request):
-    time.sleep(5)
-    x_data = [0,1,2,3]
-    y_data = [x**2 for x in x_data]
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x_data, y=y_data, mode='lines', name='test', opacity=0.8, marker_color='green'))
-    fig = cleanse_fig(fig)
-    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
-    return HttpResponse(plot_div)
+    qs = []
+    for plist in post_list:
+        for post in plist.objects.all():
+            vh = post.views\
+                .annotate(hour=Trunc('call_date', 'hour'))\
+                .values('hour')\
+                .annotate(call=Count('id'))
+            qs.append(vh)
 
+    new_qs = qs[0].union(*qs[1:]) # merged but somehow not enough
+    # TODO: make more efficient
+    hours = []
+    calls = []
+    for q in list(new_qs):
+        try:
+            i = hours.index(q["hour"])
+            calls[i] += q["call"]
+        except: # element does not yet exist
+            hours.append(q["hour"])
+            calls.append(q["call"])
+
+    fig = go.Figure()
+    fig.layout.update(
+        margin=dict(l=0, r=0, t=0, b=0)
+    )
+    fig.add_trace(go.Bar(x=hours, y=calls))
+    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+
+    return HttpResponse(plot_div)
 
 
 
@@ -89,7 +122,7 @@ def fetch_relative_views(request):
     labels = []
     for plist in [ppost]:
         for post in plist.objects.all():
-            values.append(post.views)
+            values.append(post.views.count())
             labels.append(post.title)
 
     fig = go.Figure()
@@ -102,7 +135,25 @@ def fetch_relative_views(request):
 
 
 
+def fetch_aio_sensors(request):
+    s = sensor.objects.using('aio_analytics').all()
 
+    time = list(s.values_list("time", flat=True))
+    h = list(s.values_list("humidity", flat=True))
+    l = list(s.values_list("luminosity", flat=True))
+    t = list(s.values_list("temperature", flat=True))
+
+    fig = go.Figure()
+    l = [100 * li for li in l]
+    fig.add_trace(go.Scatter(x=time, y=l, name='luminosity', opacity=0.02, fill='tozeroy', mode='none', line_color='grey'))
+
+    fig.add_trace(go.Scatter(x=time, y=h, mode='lines', name='humidity', opacity=0.8))
+    fig.add_trace(go.Scatter(x=time, y=t, mode='lines', name='temperature', opacity=0.8))
+
+
+    fig = cleanse_fig(fig)
+    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+    return HttpResponse(plot_div)
 
 def get_cumulated():
     total_posts = 0
@@ -113,6 +164,8 @@ def get_cumulated():
         total_views += views["views__sum"]
     print(total_posts, total_views)    
     return total_posts, total_views
+
+
 
 
 ######## helper:
