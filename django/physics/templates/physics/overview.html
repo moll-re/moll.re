@@ -3,11 +3,10 @@
 
 
 {% block content %}
-<div class="container mt-5 mb-5">
     <h1 class="display-3">Physical doodling</h1>
     {% if post_list %}
         {% for post in post_list %}
-            <a href="/physics/{{ post.id }}/" class="card mb-3">
+            <a href="/physics/{{ post.id }}/" class="card mb-3" style="color: inherit; text-decoration: none;">
                 <div class="card-body">
                     <div class="card-title justify-content-between">
                         <h4>{{ post.title }}</h4>
@@ -27,7 +26,6 @@
     {% else %}
         <p>No posts created yet.</p>
     {% endif %}
-</div>
 {% endblock content %}
 
 

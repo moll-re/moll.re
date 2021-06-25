@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-
+from . import keys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -67,6 +67,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # custom
+                'website.context.navlinks'
             ],
         },
     },
@@ -78,11 +80,20 @@ WSGI_APPLICATION = 'website.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
+dbk = keys.db_keys
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'aio_analytics': {
+        'NAME': dbk["name"],
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': dbk["url"],
+        'PORT': dbk["port"],
+        'USER': dbk["username"],
+        'PASSWORD': dbk["password"],
+        'CONN_MAX_AGE' : None
     }
 }
 
@@ -111,13 +122,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
+
+TEMPLATE_CONTEXT_PROCESSORS = ('website.context.navlinks',)
 
 
 # Static files (CSS, JavaScript, Images)

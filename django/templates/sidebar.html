@@ -1,70 +1,42 @@
-<nav id="sidebar">
-  <div class="sidebar-header text-center">
-      <a href="/"><h3>
-        moll.re
-        <i class="fa fa-angle-double-left"></i>
-      </h3></a>
-  </div>
-
-  
-  <ul class="list-unstyled components">
-      <p class="text-center">My personal website. It is a little experimentation about django, wehbosting, and programming in general.</p>
-      
-      {% with 'physics analytics about' as list %}
-        {% for u in list.split %}
-          {% with "/"|add:u|add:"/" as p %}
-            <li class="{% if request.path == p %}active{% endif %} text-center">
-              <a href="/{{u}}">{{u}}</a>
-            </li>
-          {% endwith %}
-        {% endfor %}
-      {% endwith %}
-    <!--
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary fixed-left flex-md-column shadow">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="https://github.com/moll-re.png" alt="moll-re" width="30" height="30" class="rounded-circle img-thumbnail" style='background-color: transparent'>
+        </a>
         
-    <li class="active">
-        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-        <ul class="collapse list-unstyled" id="homeSubmenu">
-            <li>
-                <a href="#">Home 1</a>
-            </li>
-            <li>
-                <a href="#">Home 2</a>
-            </li>
-            <li>
-                <a href="#">Home 3</a>
-            </li>
-        </ul>
-      </li>
-      <li>
-          <a href="#">About</a>
-      </li>
-      <li>
-          <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
-          <ul class="collapse list-unstyled" id="pageSubmenu">
-              <li>
-                  <a href="#">Page 1</a>
-              </li>
-              <li>
-                  <a href="#">Page 2</a>
-              </li>
-              <li>
-                  <a href="#">Page 3</a>
-              </li>
-          </ul>
-      </li>
-      <li>
-          <a href="#">Portfolio</a>
-      </li>
-      <li>
-          <a href="#">Contact</a>
-      </li>-->
-  </ul>
+        <button class="navbar-toggler" type="button" data-BS-toggle="collapse" data-bs-target="#navbar-custom-items"
+                aria-controls="navbar-custom-items" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-  <ul class="list-unstyled CTAs">
-      <li>
-          <a href="https://github.com/moll-re/moll.re" class="btn btn-primary"><i class="fab fa-github"></i> Source</a>
-          <!--btn-lg active??-->
-      </li>
+        <div class="collapse navbar-collapse" id="navbar-custom-items">
+            <ul class="navbar-nav flex-md-column">
+                {% for link in navlinks %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if link.active %} active {% endif %}" href="{{ link.url }}">{{ link.name }}</a>
+                    </li>
+                {% endfor %}
+                <li class="nav-item">
+                    <a class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Contact</a>
+                </li>
+                
+            </ul>
+            <!-- <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item">Action</a>
+                    <a class="dropdown-item">Another action</a>
+                    <a class="dropdown-item">Something else here</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item">Separated link</a>
+                    <a class="dropdown-item">One more separated link</a>
+                </div>
+            </li> -->
 
-  </ul>
+        </div>
+        <!-- <div class="fixed-bottom d-none d-md-block text-center">HHHHh</div> -->
+    </div>
 </nav>

@@ -1,3 +1,30 @@
 from django.db import models
 
-# Create your models here.
+
+class ChatMetric(models.Model):
+    time = models.DateTimeField()
+    activity = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'chatmetric'
+
+
+class ErrorMetric(models.Model):
+    time = models.DateTimeField()
+    error = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'errormetric'
+
+
+class SensorMetric(models.Model):
+    time = models.DateTimeField()
+    temperature = models.IntegerField()
+    humidity = models.IntegerField()
+    luminosity = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'sensormetric'

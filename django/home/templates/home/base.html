@@ -8,27 +8,23 @@
 {% block customscripts %}
 {% load static %}
 <link rel="stylesheet" href="{% static "css/animation.css" %}"/>
-<!--
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
--->
 {% endblock customscripts %}
 
 
 {% block content %}
-<div class="position-relative top-50 start-50 translate-middle">
+
+<div class="position-static top-50 start-50 translate-middle">
     
     <a href="#" class="intro-banner-vdo-play-btn pinkBg">
         <i class="glyphicon glyphicon-play whiteText" aria-hidden="true"></i>
         <span class="ripple pinkBg"></span>
         <span class="ripple pinkBg"></span>
         <span class="ripple pinkBg"></span>
-    </a>
-    <br /><br /><br /><br /><br /><br /><br /><br />
-    
+    </a>    
+
+</div>
 
     <h1 class="display-3 text-center">Welcome to moll.re!</h1>
     <p class="text-center">Access the true content of this page through the site page. Enjoy!</p>
-     
-</div>
 
 {% endblock content %}

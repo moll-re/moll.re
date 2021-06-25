@@ -1,0 +1,30 @@
+<nav aria-label="Post navigation" class="justify-content-end">
+    <ul class="pagination">
+        {% if 'previous' in posts %}    
+            <li class="page-item">
+                <a class="page-link" href="{{ posts.previous }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if 'next' in posts %}    
+            <li class="page-item">
+                <a class="page-link" href="{{ posts.next }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
