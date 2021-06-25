@@ -4,7 +4,7 @@ pages = [
         "url" : "/physics"
     },
     {
-        "name" : "Anylytics",
+        "name" : "Analytics",
         "url" : "/analytics",
     },
     {
