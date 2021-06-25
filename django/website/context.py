@@ -1,15 +1,15 @@
 pages = [
     {
         "name" : "Physics",
-        "url" : "physics"
+        "url" : "/physics"
     },
     {
         "name" : "Anylytics",
-        "url" : "analytics",
+        "url" : "/analytics",
     },
     {
         "name" : "About",
-        "url" : "about"
+        "url" : "/about"
     }
 ]
 

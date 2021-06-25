@@ -3,11 +3,9 @@
 
 
 {% block content %}
-    <div class="row align-items-center">
-        <div class="col-md-10">
-            <h1 class="display-3">{{ title }}</h1>
-        </div>
-        <div class="col-md-1 align-middle">
+    <div class="d-flex justify-content-between">
+        <h1 class="display-3">{{ title }}</h1>
+        <div class="align-self-center">
             {% include 'physics/postnav_macro.html' with posts=toplinks %}
         </div>
     </div>

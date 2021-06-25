@@ -5,7 +5,7 @@ import datetime
 from .models import Post
 
 import markdown
-md = markdown.Markdown()#   extensions=["markdown_katex"])
+md = markdown.Markdown(extensions=["markdown_katex"])
 
 
 OVERVIEW_CUT = 100
@@ -19,7 +19,7 @@ def index(request):
         data = {
             "id" : p.id,
             "title" : p.title,
-            "content" : md.convert(content_short, output_format="html5"),
+            "content" : md.convert(content_short),
             "topics": p.topics.all(),
             "date" : p.pub_date,
         }

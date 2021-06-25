@@ -16,7 +16,7 @@
                         <small>{{ post.date|date}}</small>
                     </div>
                     
-                    <p class="mb-1">{{ post.content }}</p>
+                    <p class="mb-1">{{ post.content|safe }}</p>
                     Topics: 
                     {% for t in post.topics %}
                         <span class="badge bg-secondary">{{ t }}</span>
