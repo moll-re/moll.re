@@ -88,7 +88,7 @@ DATABASES = {
     },
     'aio_analytics': {
         'NAME': dbk["name"],
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'HOST': dbk["url"],
         'PORT': dbk["port"],
         'USER': dbk["username"],

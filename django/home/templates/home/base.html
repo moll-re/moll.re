@@ -12,19 +12,23 @@
 
 
 {% block content %}
-
-<div class="position-static top-50 start-50 translate-middle">
-    
-    <a href="#" class="intro-banner-vdo-play-btn pinkBg">
-        <i class="glyphicon glyphicon-play whiteText" aria-hidden="true"></i>
-        <span class="ripple pinkBg"></span>
-        <span class="ripple pinkBg"></span>
-        <span class="ripple pinkBg"></span>
-    </a>    
-
+<div class="position-relative" style="height: 100vh;">
+    <div class="position-absolute top-50 start-50 translate-middle">
+        <a href="#" class="intro-banner-vdo-play-btn pinkBg">
+            <i class="glyphicon glyphicon-play whiteText" aria-hidden="true"></i>
+            <span class="ripple pinkBg"></span>
+            <span class="ripple pinkBg"></span>
+            <span class="ripple pinkBg"></span>
+        </a>
+        
+    </div>
+    <div class="position-absolute bottom-50 start-50 translate-middle">
+        <h1 class="display-3 text-center">Welcome to moll.re!</h1>
+        <p class="text-center">Access the true content of this page through the site page. Enjoy!</p>
+    </div>
 </div>
 
-    <h1 class="display-3 text-center">Welcome to moll.re!</h1>
-    <p class="text-center">Access the true content of this page through the site page. Enjoy!</p>
+
+    
 
 {% endblock content %}

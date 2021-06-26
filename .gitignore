@@ -1,5 +1,10 @@
-keys.py
+# Virtual environment
+VE
 
+keys.py
+# migrations & compiled messages
+**/migrations
+*.mo
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,7 +1,8 @@
-<nav class="navbar navbar-expand-sm navbar-dark bg-primary fixed-left flex-md-column shadow">
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary bg-gradient fixed-left flex-md-column shadow">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
             <img src="https://github.com/moll-re.png" alt="moll-re" width="30" height="30" class="rounded-circle img-thumbnail" style='background-color: transparent'>
+            <span class="font-monospace fw-bold">moll.re</span>
         </a>
         
         <button class="navbar-toggler" type="button" data-BS-toggle="collapse" data-bs-target="#navbar-custom-items"
@@ -16,13 +17,6 @@
                         <a class="nav-link {% if link.active %} active {% endif %}" href="{{ link.url }}">{{ link.name }}</a>
                     </li>
                 {% endfor %}
-                <li class="nav-item">
-                    <a class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">Contact</a>
-                </li>
-                
             </ul>
             <!-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -38,5 +32,8 @@
 
         </div>
         <!-- <div class="fixed-bottom d-none d-md-block text-center">HHHHh</div> -->
+        <div class="position-absolute bottom-0 start-50 translate-middle mb-5 d-none d-md-block">
+            <a class="btn btn-secondary" href="https://github.com/moll-re/moll.re"><i class="fab fa-github"></i> source</a>
+        </div>
     </div>
 </nav>

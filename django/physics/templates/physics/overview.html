@@ -1,12 +1,12 @@
 {% extends "physics/base.html" %}
 
 
-
 {% block content %}
     <h1 class="display-3">Physical doodling</h1>
     {% if post_list %}
         {% for post in post_list %}
-            <a href="/physics/{{ post.id }}/" class="card mb-3" style="color: inherit; text-decoration: none;">
+            <a href="/physics/{{ post.id }}/" class="card mb-3 overflow-hidden" style="color: inherit; text-decoration: none;">
+                
                 <div class="card-body">
                     <div class="card-title justify-content-between">
                         <h4>{{ post.title }}</h4>
