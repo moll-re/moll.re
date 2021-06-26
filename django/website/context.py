@@ -19,7 +19,7 @@ def navlinks(request):
     
     context = []
     for p in pages:
-        p["active"] = p["url"] == page
+        p["active"] = p["url"][1:] == page
         context.append(p)
     return {'navlinks': context}
 
