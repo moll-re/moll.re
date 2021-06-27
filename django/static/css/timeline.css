@@ -22,7 +22,7 @@ ul.timeline > li:before {
     display: inline-block;
     position: absolute;
     border-radius: 50%;
-    border: 3px solid #22c0e8;
+    border: 3px solid var(--bs-primary);
     left: 20px;
     width: 20px;
     height: 20px;
@@ -30,11 +30,11 @@ ul.timeline > li:before {
 }
 
 ul.timeline a {
-    color: rgb(55, 201, 255);
+    color: var(--bs-primary);
     text-decoration-color: initial;
     background-color: transparent;
 }
-ul.timeline a:hover {
+/* ul.timeline a:hover {
     color: #0056b3;
     text-decoration: underline;
-}
+} */

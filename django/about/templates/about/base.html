@@ -24,7 +24,7 @@ About
                 {% for event in timeline %}
                     <li>
                         <a target="_blank" href="{{ event.link }}">{{ event.title }}</a>
-                        <a href="#" class="float-end"><span class="badge bg-secondary">{{ event.date}}</span></a>
+                        <a href="#" class="float-end"><span class="badge bg-primary">{{ event.date}}</span></a>
                         <p>{{ event.text }}</p>
                     </li>
 				{% endfor %}

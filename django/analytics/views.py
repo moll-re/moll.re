@@ -108,7 +108,11 @@ def fetch_total_views(request):
 
     fig = go.Figure()
     fig.layout.update(
-        margin=dict(l=0, r=0, t=0, b=0)
+        margin=dict(l=0, r=0, t=0, b=0),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis = dict(range=[hours[-24], hours[-1]])
+
     )
     fig.add_trace(go.Bar(x=hours, y=calls))
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
@@ -126,7 +130,7 @@ def fetch_relative_views(request):
             labels.append(post.title)
 
     fig = go.Figure()
-    fig.add_trace(go.Pie(labels = labels, values=values, textinfo="label"))
+    fig.add_trace(go.Pie(labels = labels, values=values))
     fig = cleanse_fig(fig)
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     return HttpResponse(plot_div)
@@ -154,6 +158,8 @@ def fetch_aio_sensors(request):
     fig = cleanse_fig(fig)
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     return HttpResponse(plot_div)
+
+
 
 def get_cumulated():
     total_posts = 0

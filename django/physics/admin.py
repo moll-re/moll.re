@@ -7,6 +7,7 @@ from .models import Post, PostTopic
 # Register your models here.
 class TopicInlineFormset(admin.StackedInline):
     model = PostTopic
+    extra = 0
 
 
 class PostAdmin(admin.ModelAdmin):
