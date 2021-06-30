@@ -88,7 +88,7 @@ DATABASES = {
     },
     'aio_analytics': {
         'NAME': dbk["name"],
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'HOST': dbk["url"],
         'PORT': dbk["port"],
         'USER': dbk["username"],
@@ -142,3 +142,4 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+STATIC_ROOT = "static_hosting"

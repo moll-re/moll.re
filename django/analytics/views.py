@@ -1,15 +1,18 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Q
 from django.db.models.functions import Trunc
 
 import time
 
 from physics.models import Post as ppost
-post_list = [ppost]
-from .models import SensorMetric as sensor
-
 # from blog.models import Post as bpost
+post_list = [ppost]
+
+from .models import SensorMetric as sensor
+from .models import ChatMetric as chat
+from .models import AIOList as alist
+
 
 import plotly.graph_objects as go
 from plotly.offline import plot
@@ -52,13 +55,30 @@ def index(request):
         "width" : 4})
     # context["card_list"].append({"content": card_relative_views(), "width" : 4})
 
-    context["card_list"].append({
-        "content": async_card(
-            "Sensor metrics",
-            "aio_sensors",
-            "fetch_aio_sensors"
-            ),
-        "width" : 4})
+    if request.user.is_authenticated:
+        context["card_list"].append({
+            "content": async_card(
+                "Sensor metrics",
+                "aio_sensors",
+                "fetch_aio_sensors"
+                ),
+            "width" : 4})
+
+        context["card_list"].append({
+            "content": async_card(
+                "Chat metrics",
+                "aio_bot_stats",
+                "fetch_aio_bot_stats"
+                ),
+            "width" : 4})
+
+        context["card_list"].append({
+            "content": async_card(
+                "List content",
+                "aio_lists",
+                "fetch_aio_lists"
+                ),
+            "width" : 4})
     return render(request, "analytics/overview.html", context)
 
 
@@ -108,8 +128,13 @@ def fetch_total_views(request):
 
     fig = go.Figure()
     fig.layout.update(
-        margin=dict(l=0, r=0, t=0, b=0)
+        margin=dict(l=0, r=0, t=0, b=0),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis = dict(range=[hours[-24], hours[-1]])
+
     )
+    print("HOURS:", hours[-24])
     fig.add_trace(go.Bar(x=hours, y=calls))
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 
@@ -126,7 +151,7 @@ def fetch_relative_views(request):
             labels.append(post.title)
 
     fig = go.Figure()
-    fig.add_trace(go.Pie(labels = labels, values=values, textinfo="label"))
+    fig.add_trace(go.Pie(labels = labels, values=values))
     fig = cleanse_fig(fig)
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     return HttpResponse(plot_div)
@@ -155,6 +180,8 @@ def fetch_aio_sensors(request):
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     return HttpResponse(plot_div)
 
+
+
 def get_cumulated():
     total_posts = 0
     total_views = 0
@@ -162,11 +189,73 @@ def get_cumulated():
         total_posts += plist.objects.count()
         views = plist.objects.all().aggregate(Sum("views"))
         total_views += views["views__sum"]
-    print(total_posts, total_views)    
     return total_posts, total_views
 
 
 
+def fetch_aio_bot_stats(request):
+    c = chat.objects.using('aio_analytics').all()
+
+    
+    hourly = c\
+        .annotate(hour=Trunc('time', 'hour'))\
+        .values('hour')\
+        .annotate(call=Count('read', filter=Q(read=True)))
+    
+    hr = list(hourly.values_list("hour", flat=True))
+    ar = list(hourly.values_list("call", flat=True))
+
+    hourly = c\
+        .annotate(hour=Trunc('time', 'hour'))\
+        .values('hour')\
+        .annotate(call=Count('send', filter=Q(send=True)))
+    
+    hs = list(hourly.values_list("hour", flat=True))
+    a_s = list(hourly.values_list("call", flat=True))
+
+    hourly = c\
+        .annotate(hour=Trunc('time', 'hour'))\
+        .values('hour')\
+        .annotate(call=Count('execute', filter=Q(execute=True)))
+    
+    he = list(hourly.values_list("hour", flat=True))
+    ae = list(hourly.values_list("call", flat=True))
+
+    fig = go.Figure()
+    fig.layout.update(
+        margin=dict(l=0, r=0, t=0, b=0),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        # xaxis = dict(range=[hours[-24], hours[-1]])
+
+    )
+    fig.add_trace(go.Bar(x=hr, y=ar))
+    fig.add_trace(go.Bar(x=hs, y=a_s))
+    fig.add_trace(go.Bar(x=he, y=ae))
+    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+
+    return HttpResponse(plot_div)
+
+
+
+
+
+list_base = """
+<ul class='list-group list-group-flush'>
+{}
+</ul>
+"""
+
+def fetch_aio_lists(request):
+    lists = alist.objects.using("aio_analytics").all()
+    content = ""
+    for l in list(lists):
+        
+        it = l.content.split("<-->")
+        for i in it[:-1]:
+            content += "<li class='list-group-item'>{}</li>\n".format(i)
+    list_div = list_base.format(content)
+    return HttpResponse(list_div)
 
 ######## helper:
 def cleanse_fig(fig):
@@ -186,6 +275,5 @@ def cleanse_fig(fig):
             margin=dict(l=0, r=0, t=0, b=0),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-
             )
     return fig

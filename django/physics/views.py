@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+
+from django.utils import timezone
 import datetime
 # from django.template import loader
 from .models import Post
@@ -17,7 +18,7 @@ def index(request):
         content_short = " ".join(p.content.split(" ")[:OVERVIEW_CUT]) + " ..." # shortened to the 100 first words.
         # TODO: verify if not breaking math. replace titles by bold text
         data = {
-            "id" : p.id,
+            "url" : "post/{}".format(p.slug),
             "title" : p.title,
             "content" : md.convert(content_short),
             "topics": p.topics.all(),
@@ -28,31 +29,34 @@ def index(request):
     return render(request, "physics/overview.html", context)
 
 
-def expand_post(request, post_id):
-    p = Post.objects.get(id=post_id)
+def expand_post(request, slug):
+    p = Post.objects.get(slug=slug)
     # increase count number:
-    p.views.create(call_date=datetime.datetime.now())
+    p.views.create(call_date=datetime.datetime.now(tz = timezone.utc))
     context = {
         "title" : p.title,
         "content" : md.convert(p.content),
         "date" : p.pub_date.date(),
         "topics": p.topics.all(),
         "views": p.views.count(),
-        "toplinks" : get_toplinks(int(post_id)),
+        "toplinks" : get_toplinks(p.id),
         }
     return render(request, "physics/post.html", context)
 # Create your views here.
 
 
 def get_toplinks(post_id):
-    links = {
-        "previous" : "/physics/{}".format(post_id - 1),
-        "next" : "/physics/{}".format(post_id + 1)
-    }
-
-    if post_id == 1:
-        links.pop("previous")
-    elif post_id == Post.objects.count():
-        links.pop("next")
+    links = {}
+    try:
+        prev = Post.objects.get(id=post_id - 1)
+        links["previous"] = "/physics/post/{}".format(prev.slug)
+    except:
+        pass
+    try:
+        next = Post.objects.get(id=post_id + 1)
+        links["next"] = "/physics/post/{}".format(next.slug)
+    except:
+        pass
 
     return links
+

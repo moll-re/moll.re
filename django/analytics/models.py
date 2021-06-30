@@ -3,7 +3,10 @@ from django.db import models
 
 class ChatMetric(models.Model):
     time = models.DateTimeField()
-    activity = models.CharField(max_length=255)
+    send = models.BooleanField()
+    read = models.BooleanField()
+    execute = models.BooleanField()
+
 
     class Meta:
         managed = False
@@ -28,3 +31,12 @@ class SensorMetric(models.Model):
     class Meta:
         managed = False
         db_table = 'sensormetric'
+
+
+class AIOList(models.Model):
+    name = models.CharField(max_length=255)
+    content = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'list'
