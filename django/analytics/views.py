@@ -18,6 +18,7 @@ import plotly.graph_objects as go
 from plotly.offline import plot
 from plotly.graph_objs import Scatter
 
+import datetime
 
 card_str = """
 <div class="card-body">
@@ -26,6 +27,8 @@ card_str = """
 </div>
 """
 
+delta = datetime.timedelta(days=7)
+# used for setting the plot-range
 
 def index(request):
     card = """
@@ -127,14 +130,10 @@ def fetch_total_views(request):
             calls.append(q["call"])
 
     fig = go.Figure()
+    fig = cleanse_fig(fig)
     fig.layout.update(
-        margin=dict(l=0, r=0, t=0, b=0),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        xaxis = dict(range=[hours[-24], hours[-1]])
-
+        xaxis = dict(range=[hours[-1] - delta, hours[-1]])
     )
-    print("HOURS:", hours[-24])
     fig.add_trace(go.Bar(x=hours, y=calls))
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 
@@ -169,14 +168,18 @@ def fetch_aio_sensors(request):
     t = list(s.values_list("temperature", flat=True))
 
     fig = go.Figure()
-    l = [100 * li for li in l]
-    fig.add_trace(go.Scatter(x=time, y=l, name='luminosity', opacity=0.02, fill='tozeroy', mode='none', line_color='grey'))
+    height = max(h)
+    l = [height * li for li in l]
 
-    fig.add_trace(go.Scatter(x=time, y=h, mode='lines', name='humidity', opacity=0.8))
-    fig.add_trace(go.Scatter(x=time, y=t, mode='lines', name='temperature', opacity=0.8))
+    fig.add_trace(go.Scatter(x=time, y=l, name='luminosity', opacity=0.02, fill='tozeroy', mode='none', line_color='grey'))
+    fig.add_trace(go.Scatter(x=time, y=h, mode='lines', name='humidity', opacity=0.8, line_shape='spline'))
+    fig.add_trace(go.Scatter(x=time, y=t, mode='lines', name='temperature', opacity=0.8, line_shape='spline'))
 
 
     fig = cleanse_fig(fig)
+    fig.layout.update(
+        xaxis = dict(range = [time[-1]-delta, time[-1]])
+    )
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     return HttpResponse(plot_div)
 
@@ -222,18 +225,19 @@ def fetch_aio_bot_stats(request):
     ae = list(hourly.values_list("call", flat=True))
 
     fig = go.Figure()
+    
+    fig.add_trace(go.Bar(x=hr, y=ar, name="received"))
+    fig.add_trace(go.Bar(x=hs, y=a_s, name="sent"))
+    fig.add_trace(go.Bar(x=he, y=ae, name="executed"))
+
+    fig = cleanse_fig(fig)
+    last_hour = max([hr[-1], hs[-1], he[-1]])
     fig.layout.update(
-        margin=dict(l=0, r=0, t=0, b=0),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        # xaxis = dict(range=[hours[-24], hours[-1]])
-
+        xaxis = dict(range = [last_hour - delta, last_hour]),
+        barmode='stack'
     )
-    fig.add_trace(go.Bar(x=hr, y=ar))
-    fig.add_trace(go.Bar(x=hs, y=a_s))
-    fig.add_trace(go.Bar(x=he, y=ae))
-    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 
+    plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     return HttpResponse(plot_div)
 
 
@@ -262,13 +266,13 @@ def cleanse_fig(fig):
     fig.layout.update(
             xaxis = {
                 'showgrid': False, # thin lines in the background
-                'zeroline': False, # thick line at x=0
-                'visible': False,  # numbers below
+                # 'zeroline': False, # thick line at x=0
+                # 'visible': False,  # numbers below
             }, # the same for yaxis
             yaxis = {
                 'showgrid': False, # thin lines in the background
-                'zeroline': False, # thick line at x=0
-                'visible': False,  # numbers below
+                # 'zeroline': False, # thick line at x=0
+                # 'visible': False,  # numbers below
             }, # the same for yaxis
 
             showlegend=False,

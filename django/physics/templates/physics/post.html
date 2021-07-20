@@ -3,11 +3,9 @@
 
 
 {% block pcontent %}
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between align-items-center">
         <h1 class="display-3">{{ title }}</h1>
-        <div class="align-self-center">
-            {% include 'physics/postnav_macro.html' with posts=toplinks %}
-        </div>
+        {% include 'physics/postnav_macro.html' with posts=toplinks %}
     </div>
     
     

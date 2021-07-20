@@ -12,17 +12,17 @@
                         <h4>{{ post.title }}</h4>
                         <small>{{ post.date|date}}</small>
                     </div>
-
+                    
                     <p class="mb-1">{{ post.content|safe }}</p>
                     Topics: 
                     {% for t in post.topics %}
                         <span class="badge bg-primary">{{ t }}</span>
                     {% endfor %}
                 </div>
-
+                    
             </a>
         {% endfor %}
-
+        
     {% else %}
         <p>No posts created yet.</p>
     {% endif %}
