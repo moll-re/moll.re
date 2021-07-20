@@ -168,11 +168,12 @@ def fetch_aio_sensors(request):
     t = list(s.values_list("temperature", flat=True))
 
     fig = go.Figure()
-    l = [100 * li for li in l]
-    fig.add_trace(go.Scatter(x=time, y=l, name='luminosity', opacity=0.02, fill='tozeroy', mode='none', line_color='grey'))
+    height = max(h)
+    l = [height * li for li in l]
 
-    fig.add_trace(go.Scatter(x=time, y=h, mode='lines', name='humidity', opacity=0.8))
-    fig.add_trace(go.Scatter(x=time, y=t, mode='lines', name='temperature', opacity=0.8))
+    fig.add_trace(go.Scatter(x=time, y=l, name='luminosity', opacity=0.02, fill='tozeroy', mode='none', line_color='grey'))
+    fig.add_trace(go.Scatter(x=time, y=h, mode='lines', name='humidity', opacity=0.8, line_shape='spline'))
+    fig.add_trace(go.Scatter(x=time, y=t, mode='lines', name='temperature', opacity=0.8, line_shape='spline'))
 
 
     fig = cleanse_fig(fig)
@@ -232,7 +233,8 @@ def fetch_aio_bot_stats(request):
     fig = cleanse_fig(fig)
     last_hour = max([hr[-1], hs[-1], he[-1]])
     fig.layout.update(
-        xaxis = dict(range = [last_hour - delta, last_hour])
+        xaxis = dict(range = [last_hour - delta, last_hour]),
+        barmode='stack'
     )
 
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
