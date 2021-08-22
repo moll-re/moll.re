@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Sum, Count, Q
 from django.db.models.functions import Trunc
+from django.utils import timezone
 
 import time
 
@@ -27,7 +28,7 @@ card_str = """
 </div>
 """
 
-delta = datetime.timedelta(days=7)
+delta = datetime.timedelta(days=14)
 # used for setting the plot-range
 
 def index(request):
@@ -42,7 +43,7 @@ def index(request):
 
     context["card_list"].append({
         "content": async_card(
-            "Total views (hourly)",
+            "Total views (daily)",
             "total_views",
             "fetch_total_views"
             ),
@@ -51,7 +52,7 @@ def index(request):
 
     context["card_list"].append({
         "content": async_card(
-            "Post view ratio",
+            "Post popularity",
             "relative_views",
             "fetch_relative_views"
             ),
@@ -74,14 +75,16 @@ def index(request):
                 "fetch_aio_bot_stats"
                 ),
             "width" : 4})
+        lists = alist.objects.using("aio_analytics").all()
+        for l in lists:
+            context["card_list"].append({
+                "content": async_card(
+                    "Content of {}".format(l.name),
+                    "aio_lists_{}".format(l.id),
+                    "fetch_aio_lists/{}".format(l.id)
+                    ),
+                "width" : 4})
 
-        context["card_list"].append({
-            "content": async_card(
-                "List content",
-                "aio_lists",
-                "fetch_aio_lists"
-                ),
-            "width" : 4})
     return render(request, "analytics/overview.html", context)
 
 
@@ -112,29 +115,29 @@ def fetch_total_views(request):
     for plist in post_list:
         for post in plist.objects.all():
             vh = post.views\
-                .annotate(hour=Trunc('call_date', 'hour'))\
-                .values('hour')\
+                .annotate(day=Trunc('call_date', 'day'))\
+                .values('day')\
                 .annotate(call=Count('id'))
             qs.append(vh)
 
     new_qs = qs[0].union(*qs[1:]) # merged but somehow not enough
     # TODO: make more efficient
-    hours = []
+    days = []
     calls = []
     for q in list(new_qs):
         try:
-            i = hours.index(q["hour"])
+            i = days.index(q["day"])
             calls[i] += q["call"]
         except: # element does not yet exist
-            hours.append(q["hour"])
+            days.append(q["day"])
             calls.append(q["call"])
 
     fig = go.Figure()
     fig = cleanse_fig(fig)
     fig.layout.update(
-        xaxis = dict(range=[hours[-1] - delta, hours[-1]])
+        xaxis = dict(range=[timezone.now() - delta, timezone.now()])
     )
-    fig.add_trace(go.Bar(x=hours, y=calls))
+    fig.add_trace(go.Bar(x=days, y=calls))
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 
     return HttpResponse(plot_div)
@@ -178,7 +181,7 @@ def fetch_aio_sensors(request):
 
     fig = cleanse_fig(fig)
     fig.layout.update(
-        xaxis = dict(range = [time[-1]-delta, time[-1]])
+        xaxis = dict(range = [timezone.now() - delta, timezone.now()])
     )
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     return HttpResponse(plot_div)
@@ -200,40 +203,39 @@ def fetch_aio_bot_stats(request):
     c = chat.objects.using('aio_analytics').all()
 
     
-    hourly = c\
-        .annotate(hour=Trunc('time', 'hour'))\
-        .values('hour')\
+    daily = c\
+        .annotate(day=Trunc('time', 'day'))\
+        .values('day')\
         .annotate(call=Count('read', filter=Q(read=True)))
     
-    hr = list(hourly.values_list("hour", flat=True))
-    ar = list(hourly.values_list("call", flat=True))
+    time_r = list(daily.values_list("day", flat=True))
+    activity_r = list(daily.values_list("call", flat=True))
 
-    hourly = c\
-        .annotate(hour=Trunc('time', 'hour'))\
-        .values('hour')\
+    daily = c\
+        .annotate(day=Trunc('time', 'day'))\
+        .values('day')\
         .annotate(call=Count('send', filter=Q(send=True)))
     
-    hs = list(hourly.values_list("hour", flat=True))
-    a_s = list(hourly.values_list("call", flat=True))
+    time_s = list(daily.values_list("day", flat=True))
+    activity_s = list(daily.values_list("call", flat=True))
 
-    hourly = c\
-        .annotate(hour=Trunc('time', 'hour'))\
-        .values('hour')\
+    daily = c\
+        .annotate(day=Trunc('time', 'day'))\
+        .values('day')\
         .annotate(call=Count('execute', filter=Q(execute=True)))
     
-    he = list(hourly.values_list("hour", flat=True))
-    ae = list(hourly.values_list("call", flat=True))
+    time_e = list(daily.values_list("day", flat=True))
+    activity_e = list(daily.values_list("call", flat=True))
 
     fig = go.Figure()
     
-    fig.add_trace(go.Bar(x=hr, y=ar, name="received"))
-    fig.add_trace(go.Bar(x=hs, y=a_s, name="sent"))
-    fig.add_trace(go.Bar(x=he, y=ae, name="executed"))
+    fig.add_trace(go.Bar(x=time_r, y=activity_r, name="received"))
+    fig.add_trace(go.Bar(x=time_s, y=activity_s, name="sent"))
+    fig.add_trace(go.Bar(x=time_e, y=activity_e, name="executed"))
 
     fig = cleanse_fig(fig)
-    last_hour = max([hr[-1], hs[-1], he[-1]])
     fig.layout.update(
-        xaxis = dict(range = [last_hour - delta, last_hour]),
+        xaxis = dict(range = [timezone.now() - delta, timezone.now()]),
         barmode='stack'
     )
 
@@ -250,16 +252,17 @@ list_base = """
 </ul>
 """
 
-def fetch_aio_lists(request):
-    lists = alist.objects.using("aio_analytics").all()
+def fetch_aio_lists(request, id):
+    l_id = id
+    l = alist.objects.using("aio_analytics").get(id=l_id)
     content = ""
-    for l in list(lists):
-        
-        it = l.content.split("<-->")
-        for i in it[:-1]:
-            content += "<li class='list-group-item'>{}</li>\n".format(i)
+    it = l.content.split("<-->")
+    for i in it[:-1]:
+        content += "<li class='list-group-item'>{}</li>\n".format(i)
     list_div = list_base.format(content)
     return HttpResponse(list_div)
+
+
 
 ######## helper:
 def cleanse_fig(fig):
