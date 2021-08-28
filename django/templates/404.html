@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+Error: page not found
+{% endblock title %}
+
+{% block content %}
+
+<h1 class="display-3">Error 404</h1>
+
+
+
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    <div>
+      The page you requested does not currently exist. Head <a href="/">home</a> and try again.
+    </div>
+  </div>
+  
+{% endblock content %}
+
+
