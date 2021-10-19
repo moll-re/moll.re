@@ -14,7 +14,7 @@ def profile(request):
     auth0user = user.social_auth.get(provider='auth0')
     userdata = {
         'user_id': auth0user.uid,
-        'name': user.first_name,
+        'full_name': user.first_name,
         'profile_name' : auth0user,
         'picture': auth0user.extra_data['picture'],
         'email': auth0user.extra_data['email'],

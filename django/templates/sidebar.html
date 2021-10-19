@@ -11,10 +11,16 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbar-custom-items">
-            <ul class="navbar-nav flex-md-column">
+            <ul class="navbar-nav flex-md-column text-md-center">
                 {% for link in navlinks %}
                     <li class="nav-item">
-                        <a class="nav-link {% if link.active %} active {% endif %}" href="{{ link.url }}">{{ link.name }}</a>
+                        <a class="nav-link {% if link.active %} active {% endif %}" href="{{ link.url }}">
+                            {% if link.active %}
+                                <b>{{ link.name }}</b>
+                            {% else %}
+                                {{ link.name }}
+                            {% endif %}
+                        </a>
                     </li>
                 {% endfor %}
             </ul>
@@ -31,11 +37,30 @@
             </li> -->
 
         </div>
-        <!-- <div class="fixed-bottom d-none d-md-block text-center">HHHHh</div> -->
         {% if user.is_authenticated %}
-            USER!
+            <!-- When the screen is large enough: button at the bottom of the page -->
+            <div class="position-absolute bottom-0 start-50 translate-middle mb-5 d-none d-md-block">
+                {% include "logout_button.html" %}
+            </div>
+            <!-- When the screen is too small: append to navbar items and collapse -->
+            <div class="collapse navbar-collapse" id="navbar-custom-items">
+                <div class="d-md-none">
+                    {% include "logout_button.html" %}
+                </div>
+            </div>
+        {% else %}
+            <!-- When the screen is large enough: button at the bottom of the page -->
+            <div class="position-absolute bottom-0 start-50 translate-middle mb-5 d-none d-md-block">
+                <a class="btn btn-secondary" href="/login/auth0">log in</a>
+            </div>
+            <!-- When the screen is too small: append to navbar items and collapse -->
+            <div class="collapse navbar-collapse" id="navbar-custom-items">
+                <div class="d-md-none">
+                    <a class="btn btn-secondary" href="/login/auth0">log in</a>
+                </div>
+            </div>
         {% endif %}
-        <div class="position-absolute bottom-0 start-50 translate-middle mb-5 d-none d-md-block">
+        <div class="position-absolute bottom-0 start-50 translate-middle mb-1 d-none d-md-block">
             <a class="btn btn-secondary" href="https://github.com/moll-re/moll.re"><i class="fab fa-github"></i> source</a>
         </div>
     </div>

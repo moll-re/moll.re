@@ -59,7 +59,7 @@ def index(request):
         "width" : 4})
     # context["card_list"].append({"content": card_relative_views(), "width" : 4})
 
-    if request.user.is_authenticated:
+    if request.user.is_staff:
         context["card_list"].append({
             "content": async_card(
                 "Sensor metrics",
