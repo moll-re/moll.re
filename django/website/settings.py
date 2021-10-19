@@ -35,12 +35,15 @@ INSTALLED_APPS = [
     'physics.apps.PhysicsConfig',
     'about.apps.AboutConfig',
     'analytics.apps.AnalyticsConfig',
+    'auth0login.apps.Auth0LoginConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # AUTH:
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +145,24 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 STATIC_ROOT = "static_hosting"
+
+
+
+SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
+SOCIAL_AUTH_AUTH0_DOMAIN = keys.auth0_keys["domain"]
+SOCIAL_AUTH_AUTH0_KEY = keys.auth0_keys["key"]
+SOCIAL_AUTH_AUTH0_SECRET = keys.auth0_keys["secret"]
+
+SOCIAL_AUTH_AUTH0_SCOPE = [
+    'openid',
+    'profile',
+    'email'
+]
+
+AUTHENTICATION_BACKENDS = {
+    'auth0login.auth0backend.Auth0',
+    'django.contrib.auth.backends.ModelBackend'
+}
+
+LOGIN_URL = '/login/auth0'
+LOGIN_REDIRECT_URL = '/profile'
