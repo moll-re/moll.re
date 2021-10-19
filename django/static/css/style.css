@@ -12,7 +12,7 @@ body {
   
   @media (min-width: 768px) {
     body {
-      margin-left: 232px;
+      margin-left: 200px;
     }
   }
   
@@ -27,7 +27,7 @@ body {
   @media (min-width: 768px) {
     .navbar.fixed-left {
       bottom: 0;
-      width: 232px;
+      width: 200px;
       /* was flex-start */
     }
     .navbar.fixed-left .container-fluid{

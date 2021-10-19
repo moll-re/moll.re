@@ -22,4 +22,5 @@ urlpatterns = [
     path('analytics/', include('analytics.urls')),
     path('about/', include('about.urls')),
     path('admin/', admin.site.urls),
+    path('', include('auth0login.urls'))
 ]
