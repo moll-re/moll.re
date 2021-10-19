@@ -32,6 +32,9 @@
 
         </div>
         <!-- <div class="fixed-bottom d-none d-md-block text-center">HHHHh</div> -->
+        {% if user.is_authenticated %}
+            USER!
+        {% endif %}
         <div class="position-absolute bottom-0 start-50 translate-middle mb-5 d-none d-md-block">
             <a class="btn btn-secondary" href="https://github.com/moll-re/moll.re"><i class="fab fa-github"></i> source</a>
         </div>

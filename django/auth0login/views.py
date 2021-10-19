@@ -7,14 +7,6 @@ from django.http import HttpResponseRedirect
 from urllib.parse import urlencode
 
 
-def index(request):
-    user = request.user
-    if user.is_authenticated:
-        return redirect(profile)
-    else:
-        return render(request, 'auth0login/index.html')
-
-
 
 @login_required
 def profile(request):
@@ -23,13 +15,13 @@ def profile(request):
     userdata = {
         'user_id': auth0user.uid,
         'name': user.first_name,
+        'profile_name' : auth0user,
         'picture': auth0user.extra_data['picture'],
         'email': auth0user.extra_data['email'],
     }
 
     return render(request, 'auth0login/profile.html', {
-        'auth0User': auth0user,
-        'userdata': json.dumps(userdata, indent=4)
+        'userdata': userdata
     })
 
 
