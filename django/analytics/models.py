@@ -1,5 +1,5 @@
 from django.db import models
-
+import json
 
 class ChatMetric(models.Model):
     time = models.DateTimeField()
@@ -24,9 +24,9 @@ class ErrorMetric(models.Model):
 
 class SensorMetric(models.Model):
     time = models.DateTimeField()
-    temperature = models.IntegerField()
-    humidity = models.IntegerField()
-    luminosity = models.IntegerField()
+    temperature = models.FloatField()
+    humidity = models.FloatField()
+    luminosity = models.FloatField()
 
     class Meta:
         managed = False
@@ -36,6 +36,10 @@ class SensorMetric(models.Model):
 class AIOList(models.Model):
     name = models.CharField(max_length=255)
     content = models.TextField()
+
+    @property
+    def content_as_list(self):
+        return json.loads(self.content or "[]")
 
     class Meta:
         managed = False

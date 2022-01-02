@@ -254,10 +254,9 @@ list_base = """
 
 def fetch_aio_lists(request, id):
     l_id = id
-    l = alist.objects.using("aio_analytics").get(id=l_id)
+    l = alist.objects.using("aio_analytics").get(id=l_id).content_as_list
     content = ""
-    it = l.content.split("<-->")
-    for i in it[:-1]:
+    for i in l:
         content += "<li class='list-group-item'>{}</li>\n".format(i)
     list_div = list_base.format(content)
     return HttpResponse(list_div)
